@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CryptoAI</title>
+        <script src="static/charts.js"></script>
+        <link rel="stylesheet" href="static/charts.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="main" id="main-class">
+            <div class="header">
+                <button class="menu-button" onclick="menu()"><span class="material-symbols-rounded size-42">menu</span></button>
+            </div>
+            <div class="content">
+                <div class="content-start" id="content-start">
+                    <p>Select a coin to make a prediction with the SELECT button</p>
+                </div>
+                <div class="content-select1" id="content-coin">
+                    <button class="select-button1" onclick="coin_pass('BTC')">BTC</button>
+                    <button class="select-button1" onclick="coin_pass('ETH')">ETH</button>
+                    <button class="select-button1" onclick="coin_pass('BNB')">BNB</button>
+                </div>
+                <div class="content-select2" id="content-currency">
+                    <button class="select-button2" onclick="currency_pass('EUR')">EUR</button>
+                    <button class="select-button2" onclick="currency_pass('USD')">USD</button>
+                </div>
+                <div class="content-result" id="content-result">
+                    <div class="chart-box">
+                        <div class="chartbox-title">
+                            <p id="chart-coin1"></p>
+                            <p>-</p>
+                            <p>Day</p>
+                        </div>
+                        <div class="chartbox-info">
+                            <div class="chartbox-line">
+                                <p>Date:</p>
+                                <p id="chart-date1"></p>
+                            </div>
+                            <div class="chartbox-line">
+                                <p>Time:</p>
+                                <p id="chart-time1"></p>
+                            </div>
+                            <div class="chartbox-line">
+                                <p>Price:</p>
+                                <p id="chart-priced"></p>
+                            </div>
+                        </div>
+                        <div class="chartbox-trend">
+                            <span class="material-symbols-rounded size-42" id="chart-trendd"></span>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chartbox-title">
+                            <p id="chart-coin2"></p>
+                            <p>-</p>
+                            <p>Hour</p>
+                        </div>
+                        <div class="chartbox-info">
+                            <div class="chartbox-line">
+                                <p>Date:</p>
+                                <p id="chart-date2"></p>
+                            </div>
+                            <div class="chartbox-line">
+                                <p>Time:</p>
+                                <p id="chart-time2"></p>
+                            </div>
+                            <div class="chartbox-line">
+                                <p>Price:</p>
+                                <p id="chart-priceh"></p>
+                            </div>
+                        </div>
+                        <div class="chartbox-trend">
+                            <span class="material-symbols-rounded size-42" id="chart-trendh"></span>
+                        </div>
+                    </div>
+                    <div class="model-info">
+                        <p>Model:</p>
+                        <p id="chart-model"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <button class="coin-button" id="coin-button" onclick="coin_button()">Select</button>
+                <button class="back-button" id="back-button" onclick="back_button()">Back</button>
+            </div>
+        </div>
+        <div class="error" id="error-class">
+            <h1 id="error-error"></h1>
+        </div>
+    </body>
+</html>
