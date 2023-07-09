@@ -21,6 +21,11 @@ p {
     all: unset;
 }
 
+a {
+    all: unset;
+    cursor: pointer;
+}
+
 .material-symbols-rounded {
     font-variation-settings:
     'FILL' 0,
@@ -86,6 +91,30 @@ span.size-42 {
     color: #F1F6F9;
 }
 
+.content-link:link {
+    color: #F1F6F9;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.content-link:visited {
+    color: #F1F6F9;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.content-link:hover {
+    color: #F1F6F9;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.content-link:active {
+    color: #F1F6F9;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
@@ -113,6 +142,74 @@ span.size-42 {
 
 .select-button:hover {
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25) inset;
+}
+
+.prediction-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+    color: #F1F6F9;
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-top: 36px;
+    margin-bottom: 36px;
+}
+
+.prediction-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    background-color: #394867;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+}
+
+.prediction-title {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+}
+
+.prediction-info {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.model-info {
+    color: #9BA4B5;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.loader {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 24px;
+}
+
+.loader-point {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: #F1F6F9;
 }
 
 .footer {

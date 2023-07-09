@@ -6,7 +6,7 @@ import tensorflow as tf
 db_host = "127.0.0.1"
 db_user = "root"
 db_password = "mysqldev"
-db_port = "3307"
+db_port = "3306"
 db_database = "cryptoai"
 
 def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid):
@@ -25,26 +25,70 @@ def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid)
 
     cursor = db.cursor(buffered=True)
 
+    cursor.execute("SELECT predictions FROM user WHERE userID = %s", (userid,))
+    predictions = cursor.fetchone()
+
+    if predictions == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        predictions = predictions[0]
+
+    if predictions == 0:
+        error = "nopredictions"
+        db.close()
+        return error
+
     cursor.execute("SELECT coin FROM crypto WHERE cryptoID = %s", (cryptoid,))
     crypto = cursor.fetchone()
-    crypto = crypto[0]
+
+    if crypto == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        crypto = crypto[0]
 
     cursor.execute("SELECT currency FROM fiat WHERE fiatID = %s", (fiatid,))
     fiat = cursor.fetchone()
-    fiat = fiat[0]
+
+    if fiat == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        fiat = fiat[0]
 
     symbol = crypto + fiat
 
     cursor.execute("SELECT exchangename FROM exchange WHERE exchangeID = %s", (exchangeid,))
     exchange = cursor.fetchone()
-    exchange = exchange[0]
+
+    if exchange == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        exchange = exchange[0]
 
     cursor.execute("SELECT levelID FROM user WHERE userID = %s", (userid,))
     levelid = cursor.fetchone()
-    levelid = levelid[0]
+
+    if levelid == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        levelid = levelid[0]
 
     cursor.execute("SELECT modelID, levelID, modelname FROM model WHERE cryptoID = %s ORDER BY levelID DESC", (cryptoid,))
     fetch = cursor.fetchall()
+
+    if fetch == None:
+        error = "nopredictions"
+        db.close()
+        return error
 
     length = len(fetch)
     x = 0
@@ -62,7 +106,7 @@ def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid)
         else:
             x = x + 1
 
-    model = tf.keras.models.load_model('models/' + modelname)
+    model = tf.keras.models.load_model('models/' + modelname, compile = False)
 
     timestamp = datetime.datetime.now()
     timestamp = timestamp.timestamp()
@@ -80,7 +124,7 @@ def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid)
         symbol = symbol,
         exchange = exchange,
         screener = 'crypto',
-        interval = '1D',
+        interval = '1d',
         timeout = None
     )
     
@@ -101,7 +145,7 @@ def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid)
     
     predictionidd = predictionid + 1
 
-    cursor.execute("INSERT INTO prediction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (predictionidd, modelid, fiatid, exchangeid, cryptoid, timestamp, priced, rsid, lowerbbd, upperbbd, predictiond, "Day"))
+    cursor.execute("INSERT INTO prediction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (predictionidd, modelid, fiatid, exchangeid, cryptoid, timestamp, priced, rsid, lowerbbd, upperbbd, predictiond, "day"))
     db.commit()
 
     handlerh = TA_Handler(
@@ -129,13 +173,26 @@ def makeprediction(input_cryptoid, input_fiatid, input_exchangeid, input_userid)
     
     predictionidh = predictionid + 2
 
-    cursor.execute("INSERT INTO prediction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (predictionidh, modelid, fiatid, exchangeid, cryptoid, timestamp, priceh, rsih, lowerbbh, upperbbh, predictionh, "Hour"))
+    cursor.execute("INSERT INTO prediction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (predictionidh, modelid, fiatid, exchangeid, cryptoid, timestamp, priceh, rsih, lowerbbh, upperbbh, predictionh, "hour"))
+    db.commit()
+
+    cursor.execute("SELECT predictions FROM user WHERE userID = %s", (userid,))
+    predictions_now = cursor.fetchone()
+
+    if predictions_now == None:
+        error = "nopredictions"
+        db.close()
+        return error
+    else:
+        predictions_now = predictions_now[0]
+    
+    predictions_now = predictions_now - 1
+
+    cursor.execute("UPDATE user SET predictions = %s WHERE userID = %s", (predictions_now, userid))
     db.commit()
 
     db.close()
 
-    ids = dict()
-    ids['Day'] = predictionidd
-    ids['Hour'] = predictionidh
+    ids = [predictionidd, predictionidh]
 
     return ids

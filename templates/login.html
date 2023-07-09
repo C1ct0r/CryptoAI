@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CryptoAI</title>
+        <script src="static/login.js"></script>
+        <link rel="stylesheet" href="static/login.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    </head>
+    <body onload="credentials_expire()">
+        <div class="main" id="main">
+            <p class="title" id="title">Login</p>
+            <div class="content" id="content">
+                <div class="input" id="username-input">
+                    <p class="input-title" id="username-input-title">Username / Email</p>
+                    <input class="username-input-field" id="username-input-field" type="text" placeholder="Enter username or email here..." onchange="input_valuechange('username')">
+                </div>
+                <div class="input" id="password-input">
+                    <p class="input-title" id="password-input-title">Password</p>
+                    <div class="password-input-container" id="password-input-container">
+                        <input class="password-input-field" id="password-input-field" type="password" placeholder="Enter your password here..." onchange="input_valuechange('password')">
+                        <button class="visibility-button" id="visibility-button" onclick="change_visibility('visible')">
+                            <span class="material-symbols-rounded size-24">visibility</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="info-text" id="forgot-password-text">Forgot your password? Click <a class="info-link" id="forgot-password-link" href="/forgot-password">here</a> to reset it.</p>
+                <button class="login-button" id="login-button" onclick="login()">Login</button>
+                <p class="info-text" id="register-text">Don't have an account yet? Click <a class="info-link" id="register-link" href="/register">here</a> to register.</p>
+            </div>
+        </div>
+    </body>
+</html>
