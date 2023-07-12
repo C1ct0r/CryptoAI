@@ -35,8 +35,6 @@ async function credentials_expire() {
     }
 }
 
-credentials_expire();
-
 async function get_token() {
     let username = JSON.parse(localStorage.getItem("username"));
     let password = JSON.parse(localStorage.getItem("password"));
@@ -64,7 +62,7 @@ async function get_token() {
 }
 
 function menu() {
-    location.href = "/menu?location=/charts";
+    location.href = "/menu?location=charts";
 }
 
 function back() {

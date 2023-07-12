@@ -33,8 +33,6 @@ async function credentials_expire() {
     }
 }
 
-credentials_expire();
-
 async function auto_login() {
     let username = JSON.parse(localStorage.getItem("username"));
     let password = JSON.parse(localStorage.getItem("password"));
@@ -48,7 +46,7 @@ async function auto_login() {
             headers: {
                 "username": username,
                 "password": password,
-                "timestamo": timestamp
+                "timestamp": timestamp
             }
         });
     
@@ -109,40 +107,44 @@ async function login() {
     let password_input = document.getElementById("password-input-field").value;
 
     if (username_input == '' && password_input == '') {
-        let username_input_field = document.getElementById("username-input-field");
-        username_input_field.style.width = "212px";
-
         let username_input_field_input = document.querySelector("input.username-input-field");
+        username_input_field_input.style.paddingLeft = "10px";
+        username_input_field_input.style.paddingRight = "10px";
         username_input_field_input.style.paddingTop = "4px";
         username_input_field_input.style.paddingBottom = "4px";
+
+        let username_input_field = document.getElementById("username-input-field");
         username_input_field.style.border = "2px solid #D93E3E";
-        
-        let password_input_field = document.getElementById("password-input-field");
-        password_input_field.style.width = "180px";
 
         let password_input_field_input = document.querySelector("input.password-input-field");
+        password_input_field_input.style.paddingLeft = "10px";
+        password_input_field_input.style.paddingRight = "10px";
         password_input_field_input.style.paddingTop = "4px";
         password_input_field_input.style.paddingBottom = "4px";
+
+        let password_input_field = document.getElementById("password-input-field");
         password_input_field.style.border = "2px solid #D93E3E";
 
         return;
     } else if (username_input == '') {
-        let username_input_field = document.getElementById("username-input-field");
-        username_input_field.style.width = "212px";
-
         let username_input_field_input = document.querySelector("input.username-input-field");
+        username_input_field_input.style.paddingLeft = "10px";
+        username_input_field_input.style.paddingRight = "10px";
         username_input_field_input.style.paddingTop = "4px";
         username_input_field_input.style.paddingBottom = "4px";
+
+        let username_input_field = document.getElementById("username-input-field");
         username_input_field.style.border = "2px solid #D93E3E";
 
         return;
     } else if (password_input == '') {
-        let password_input_field = document.getElementById("password-input-field");
-        password_input_field.style.width = "180px";
-
         let password_input_field_input = document.querySelector("input.password-input-field");
+        password_input_field_input.style.paddingLeft = "10px";
+        password_input_field_input.style.paddingRight = "10px";
         password_input_field_input.style.paddingTop = "4px";
         password_input_field_input.style.paddingBottom = "4px";
+
+        let password_input_field = document.getElementById("password-input-field");
         password_input_field.style.border = "2px solid #D93E3E";
 
         return;
@@ -169,20 +171,22 @@ async function login() {
     let status = myjson["status"];
 
     if (status == 0) {
-        let username_input_field = document.getElementById("username-input-field");
-        username_input_field.style.width = "212px";
-
         let username_input_field_input = document.querySelector("input.username-input-field");
+        username_input_field_input.style.paddingLeft = "10px";
+        username_input_field_input.style.paddingRight = "10px";
         username_input_field_input.style.paddingTop = "4px";
         username_input_field_input.style.paddingBottom = "4px";
+
+        let username_input_field = document.getElementById("username-input-field");
         username_input_field.style.border = "2px solid #D93E3E";
-        
-        let password_input_field = document.getElementById("password-input-field");
-        password_input_field.style.width = "180px";
 
         let password_input_field_input = document.querySelector("input.password-input-field");
+        password_input_field_input.style.paddingLeft = "10px";
+        password_input_field_input.style.paddingRight = "10px";
         password_input_field_input.style.paddingTop = "4px";
         password_input_field_input.style.paddingBottom = "4px";
+
+        let password_input_field = document.getElementById("password-input-field");
         password_input_field.style.border = "2px solid #D93E3E";
 
         return;
@@ -195,20 +199,22 @@ function input_valuechange(input_field) {
     let field = input_field;
 
     if (field == "username") {
-        let username_input_field = document.getElementById("username-input-field");
-        username_input_field.style.width = "216px";
-
         let username_input_field_input = document.querySelector("input.username-input-field");
+        username_input_field_input.style.paddingLeft = "12px";
+        username_input_field_input.style.paddingRight = "12px";
         username_input_field_input.style.paddingTop = "6px";
         username_input_field_input.style.paddingBottom = "6px";
+
+        let username_input_field = document.getElementById("username-input-field");
         username_input_field.style.border = "";
     } else if (field == "password") {
-        let password_input_field = document.getElementById("password-input-field");
-        password_input_field.style.width = "184px";
-
         let password_input_field_input = document.querySelector("input.password-input-field");
+        password_input_field_input.style.paddingLeft = "12px";
+        password_input_field_input.style.paddingRight = "12px";
         password_input_field_input.style.paddingTop = "6px";
         password_input_field_input.style.paddingBottom = "6px";
+
+        let password_input_field = document.getElementById("password-input-field");
         password_input_field.style.border = "";
     }
 }

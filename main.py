@@ -1,5 +1,5 @@
-import mysql.connector, tensorflow_prediction, hashlib
-from flask import Flask, render_template, redirect, request, jsonify, session
+import mysql.connector, tensorflow_prediction, hashlib, os
+from flask import Flask, render_template, redirect, request, jsonify, session, send_from_directory
 from datetime import datetime
 
 app = Flask(__name__)
@@ -55,7 +55,7 @@ def db_setup():
     db.commit()
     cursor.execute("CREATE TABLE IF NOT EXISTS user (userID INT, levelID INT, username TEXT, password TEXT, email TEXT, token TEXT, apitoken TEXT, apisecret TEXT, predictions INT, days INT, verified INT, code INT, codetimestamp BIGINT)")
     db.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS ticket (ticketID INT, userID INT, reference TEXT, body TEXT, edited INT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS ticket (ticketID INT, userID INT, reference TEXT, body TEXT, timestamp BIGINT, edited INT)")
     db.commit()
     
     db.close()
@@ -87,7 +87,7 @@ def api_v1_token():
         userID = userID[0]
     
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     
     cursor.execute("SELECT password FROM user WHERE userID = %s AND username = %s", (userID, username))
     password_sql = cursor.fetchone()
@@ -133,7 +133,7 @@ def api_v1_predictionamount():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     cursor.execute("SELECT predictions FROM user WHERE username = %s AND password = %s", (username, password))
     predictions = cursor.fetchone()
@@ -199,7 +199,7 @@ def api_v1_crypto():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     token = request.headers["token"]
 
     cursor.execute("SELECT levelID FROM user WHERE username = %s AND password = %s AND token = %s", (username, password, token))
@@ -306,7 +306,7 @@ def api_v1_fiat():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     token = request.headers["token"]
 
     cursor.execute("SELECT levelID FROM user WHERE username = %s AND password = %s AND token = %s", (username, password, token))
@@ -413,7 +413,7 @@ def api_v1_exchange():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     token = request.headers["token"]
 
     cursor.execute("SELECT levelID FROM user WHERE username = %s AND password = %s AND token = %s", (username, password, token))
@@ -556,7 +556,7 @@ def api_v1_prediction():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     token = request.headers["token"]
 
     cursor.execute("SELECT userID FROM user WHERE username = %s AND password = %s AND token = %s", (username, password, token))
@@ -712,7 +712,7 @@ def api_v1_login():
 
     username = request.headers["username"]
     password = request.headers["password"]
-    password = hashlib.md5(password.encode("utf-8")).hexdigest()
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     ts_fetch = request.headers["timestamp"]
     ts_fetch = int(ts_fetch)
     ts_fetch_30d = ts_fetch + 2592000
@@ -749,6 +749,55 @@ def api_v1_login():
 @app.route("/api/v1/logout")
 def api_v1_logout():
     session.pop('user', None)
+
+    json = {"status": 1}
+    return jsonify(json)
+
+@app.route("/api/v1/ticket")
+def api_v1_ticket():
+    db = mysql.connector.connect(
+        host = db_host,
+        user = db_user,
+        password = db_password,
+        port = db_port,
+        database = db_database
+    )
+    
+    cursor = db.cursor(buffered=True)
+
+    username = request.headers["username"]
+    password = request.headers["password"]
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    token = request.headers["token"]
+    reference = request.headers["reference"]
+    body = request.headers["body"]
+
+    cursor.execute("SELECT userID FROM user WHERE username = %s AND password = %s AND token = %s", (username, password, token))
+    userID = cursor.fetchone()
+
+    if userID == None:
+        json = {"status": 0}
+        db.close()
+        return jsonify(json)
+    else:
+        userID = userID[0]
+    
+    dt = datetime.now().replace(microsecond=0)
+    ts = int(dt.timestamp())
+
+    cursor.execute("SELECT ticketID FROM ticket ORDER BY ticketID DESC")
+    ticketID = cursor.fetchone()
+
+    if ticketID == None:
+        ticketID = 1
+    else:
+        ticketID = ticketID[0]
+        ticketID = ticketID + 1
+
+    cursor.execute("INSERT INTO ticket VALUES (%s, %s, %s, %s, %s, 0)", (ticketID, userID, reference, body, ts))
+    db.commit()
+
+    db.close()
 
     json = {"status": 1}
     return jsonify(json)
@@ -806,5 +855,63 @@ def login():
             return redirect("/")
     else:
         return render_template("login.html")
+
+@app.route("/menu")
+def menu():
+    if 'user' in session:
+        user = session["user"]
+        user = int(user)
+
+        dt = datetime.now().replace(microsecond=0)
+        ts = int(dt.timestamp())
+        ts_previous_day = ts - 86400
+
+        if user < ts_previous_day:
+            session.pop('user', None)
+            return redirect("/login")
+        else:
+            return render_template("menu.html")
+    else:
+        return redirect("/login")
+
+@app.route("/error")
+def error():
+    return render_template("error.html")
+
+@app.route("/ticket")
+def ticket():
+    if 'user' in session:
+        user = session["user"]
+        user = int(user)
+
+        dt = datetime.now().replace(microsecond=0)
+        ts = int(dt.timestamp())
+        ts_previous_day = ts - 86400
+
+        if user < ts_previous_day:
+            session.pop('user', None)
+            return redirect("/login")
+        else:
+            return render_template("ticket.html")
+    else:
+        return redirect("/login")
+
+@app.route("/legal/legalnotice")
+def legalnotice():
+    workingdir = os.path.abspath(os.getcwd())
+    filepath = workingdir + '/static/legal/'
+    return send_from_directory(filepath, "legal_notice.pdf")
+
+@app.route("/legal/termsofuse")
+def termsofuse():
+    workingdir = os.path.abspath(os.getcwd())
+    filepath = workingdir + '/static/legal/'
+    return send_from_directory(filepath, "terms_of_use.pdf")
+
+@app.route("/legal/privacypolicy")
+def privacypolicy():
+    workingdir = os.path.abspath(os.getcwd())
+    filepath = workingdir + '/static/legal/'
+    return send_from_directory(filepath, "privacy_policy.pdf")
 
 if __name__ == '__main__': app.run(debug=True, port=8000, host='0.0.0.0')
