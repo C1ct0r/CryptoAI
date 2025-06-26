@@ -37,4 +37,4 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.007), loss='bin
 history = model.fit(X_train, y_train, epochs=80, batch_size=32, validation_data=(X_val, y_val), callbacks=[tensorboard_callback])
 
 # Save model
-model.save('models/btc1-3.h5')
+model.save('models/v1-3.h5')
