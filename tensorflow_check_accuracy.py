@@ -18,7 +18,7 @@ scaler = StandardScaler()
 inputs = scaler.fit_transform(inputs)
 
 # Load the model
-model = tf.keras.models.load_model('models/btc1-2.h5')
+model = tf.keras.models.load_model('models/v1-2.h5')
 
 # Make predictions using the model
 predictions = model.predict(inputs)
