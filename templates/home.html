@@ -1,47 +1,73 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="home.css">
+        <link rel="stylesheet" href="/static/home.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <script>
+            function colorchange() {
+                var btc_text = document.getElementById("btc").innerHTML;
+                if (btc_text == "Sell") {
+                   document.getElementById("btc").style.color = "rgb(232, 14, 53)";
+                } else if (btc_text == "Buy") {
+                    document.getElementById("btc").style.color = "rgb(57, 238, 140)";
+                }
+
+                var eth_text = document.getElementById("eth").innerHTML;
+                if (eth_text == "Sell") {
+                   document.getElementById("eth").style.color = "rgb(232, 14, 53)";
+                } else if (eth_text == "Buy") {
+                    document.getElementById("eth").style.color = "rgb(57, 238, 140)";
+                }
+
+                var sol_text = document.getElementById("sol").innerHTML;
+                if (sol_text == "Sell") {
+                   document.getElementById("sol").style.color = "rgb(232, 14, 53)";
+                } else if (sol_text == "Buy") {
+                    document.getElementById("sol").style.color = "rgb(57, 238, 140)";
+                }
+            }
+        </script>
     </head>
-    <body>
+    <body onload="colorchange()">
         <div class="flex-column">
-            <h1>12:12</h1>
+            <h1>{{ time }}</h1>
             <div class="flex-row">
-                <div class="flex-box" id="box-1">
+                <div class="flex-box">
                     <h3>Bitcoin</h3>
                     <div class="flex-body">
-                        <p>Price: 1000</p>
-                        <p>RSI: 30</p>
-                        <p>Lower BB: 900</p>
-                        <p>Upper BB: 1100</p>
+                        <p>Price: {{ btc_price }}</p>
+                        <p>RSI: {{ btc_rsi }}</p>
+                        <p>Lower BB: {{ btc_lowerbb }}</p>
+                        <p>Upper BB: {{ btc_upperbb }}</p>
                     </div>
-                    <h2>Buy</h2>
+                    <h2 id="btc">{{ btc }}</h2>
                 </div>
-                <div class="flex-box" id="box-1">
+                <div class="flex-box">
                     <h3>Ethereum</h3>
                     <div class="flex-body">
-                        <p>Price: 1000</p>
-                        <p>RSI: 30</p>
-                        <p>Lower BB: 900</p>
-                        <p>Upper BB: 1100</p>
+                        <p>Price: {{ eth_price }}</p>
+                        <p>RSI: {{ eth_rsi }}</p>
+                        <p>Lower BB: {{ eth_lowerbb }}</p>
+                        <p>Upper BB: {{ eth_upperbb }}</p>
                     </div>
-                    <h2>Sell</h2>
+                    <h2 id="eth">{{ eth }}</h2>
+                    <script>
+
+                    </script>
                 </div>
-                <div class="flex-box" id="box-1">
+                <div class="flex-box">
                     <h3>Solana</h3>
                     <div class="flex-body">
-                        <p>Price: 1000</p>
-                        <p>RSI: 30</p>
-                        <p>Lower BB: 900</p>
-                        <p>Upper BB: 1100</p>
+                        <p>Price: {{ sol_price }}</p>
+                        <p>RSI: {{ sol_rsi }}</p>
+                        <p>Lower BB: {{ sol_lowerbb }}</p>
+                        <p>Upper BB: {{ sol_upperbb }}</p>
                     </div>
-                    <h2>Buy</h2>
+                    <h2 id="sol">{{ sol }}</h2>
+                    <script>
+
+                    </script>
                 </div>
-            </div>
-            <div class="flex-box" id="box-2">
-                <h3>Links</h3>
-                <a href="tradingview.com" target="_blank">Tradingview</a>
             </div>
         </div>
     </body>

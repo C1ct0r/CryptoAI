@@ -6,7 +6,7 @@ import numpy as np
 # Read data from csv file
 df = pd.read_csv('data/checkdata/btc_checkdata_1.csv')
 
-# Select 2000 random rows
+# Select 2000 random rows (not needed)
 #df = df.sample(n=2000)
 
 # Pandas dataframe to Numpy arrays
